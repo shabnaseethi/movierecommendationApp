@@ -26,6 +26,8 @@ const SearchHeader = (props) => {
   const [isSearchVisible, setSearchVisible] = useState(false);
   const [isUp, setIsUp] = useState(false);
 
+
+  //To populate genre drop down box while loading the app
   useEffect(() => {
     const url = `http://localhost:8080/genre/get`;
     const baseurl = `http://localhost:8080/movie/rating/7/9/desc`;
@@ -60,6 +62,8 @@ const SearchHeader = (props) => {
       });
   }, [props]);
 
+
+  // TO get drop down value
   const handleItemClick = (index, name) => {
     setTitle(name);
   };

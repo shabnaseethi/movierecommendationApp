@@ -1,29 +1,32 @@
-import React, { useState ,useCallback, useEffect} from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import Movie from "../Movie/Movie";
 import { toast } from "react-toastify";
 
 const UserHeader = () => {
- 
-  const [movie,setMovie] = useState([]);
-  const [movieName,setMovieName] = useState("");
+  const [movie, setMovie] = useState([]);
+  const [movieName, setMovieName] = useState("");
 
-  const storedUser = localStorage.getItem('currentUser');
-const userArray = JSON.parse(storedUser);
+  const storedUser = localStorage.getItem("currentUser");
+  const userArray = JSON.parse(storedUser);
 
-
-  const handleChange = useCallback((e) => {
-    setMovieName(e.target.value);
-  }, [movie]);
+  const handleChange = useCallback(
+    (e) => {
+      setMovieName(e.target.value);
+    },
+    [movie]
+  );
 
   const handleGetMovie = useCallback(() => {
-    const url = `http://localhost:8080/movie/moviename?name=${encodeURIComponent(movieName)}`;
+    const url = `http://localhost:8080/movie/moviename?name=${encodeURIComponent(
+      movieName
+    )}`;
     const requestOptions = {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     };
-    
+
     fetch(url, requestOptions)
       .then((response) => {
         if (!response.ok) {
@@ -35,63 +38,52 @@ const userArray = JSON.parse(storedUser);
         setMovie([]);
         setMovie(data);
         setMovieName("");
-        
       })
       .catch((error) => {
         console.error("There was a problem with the fetch operation:", error);
       });
-    setMovie({ title: movieName, poster_path: 'path/to/poster' }); 
+    setMovie({ title: movieName, poster_path: "path/to/poster" });
   }, [movieName]);
 
-  
-const handleUserRemoval = () => {
- 
-  toast.success("User Removed Successfully", {
-    autoClose: 1000, 
-  });
+  const handleUserRemoval = () => {
+    toast.success("User Removed Successfully", {
+      autoClose: 1000,
+    });
 
-  
-  localStorage.setItem("currentUser", JSON.stringify([]));
+    localStorage.setItem("currentUser", JSON.stringify([]));
 
-  setTimeout(() => {
-    window.location.href = '/';
-  }, 5000);
-};
+    setTimeout(() => {
+      window.location.href = "/";
+    }, 5000);
+  };
 
   const handleDeleteUser = useCallback(() => {
     const url = `http://localhost:8080/user/deleteuser`;
     const key = "Bearer " + localStorage.getItem(userArray[0]);
-    
+
     const requestOptions = {
-      method: 'DELETE',
+      method: "DELETE",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': key,
+        "Content-Type": "application/json",
+        Authorization: key,
       },
       body: JSON.stringify({
-        "username": userArray[1]
+        username: userArray[1],
       }),
     };
-  
+
     fetch(url, requestOptions)
-      .then(response => {
+      .then((response) => {
         if (!response.ok) {
           toast.warning("User Not Exists");
-         
-        }
-        else{
-          
+        } else {
           handleUserRemoval();
-        return response.json();
+          return response.json();
         }
       })
-      .then(data => {
-       
-      })
-     
+      .then((data) => {});
   }, [userArray]);
 
-  
   return (
     <>
       <div className="search-movie-banner">
@@ -106,16 +98,24 @@ const handleUserRemoval = () => {
               onChange={handleChange}
             />
             <div className="input-group-append">
-              <button className="btn btn-outline-secondary" type="button" onClick={handleGetMovie}>
-               Search
+              <button
+                className="btn btn-outline-secondary"
+                type="button"
+                onClick={handleGetMovie}
+              >
+                Search
               </button>
             </div>
           </div>
         </div>
 
         <div className="delete-user">
-          <button type="button" className="btn btn-outline-danger" onClick={handleDeleteUser}>
-            Delete User
+          <button
+            type="button"
+            className="btn btn-outline-danger"
+            onClick={handleDeleteUser}
+          >
+            Delete Profile
           </button>
         </div>
       </div>

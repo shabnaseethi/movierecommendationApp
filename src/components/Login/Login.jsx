@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
+import logo from "../resources/icons8-movie-50.png";
 
 const Login = (props) => {
   const [user, setUser] = useState({ username: "", password: "" });
@@ -18,6 +19,8 @@ const Login = (props) => {
     }));
   };
 
+
+  //To handle the submit for login or sign up based on is newUser  Value
   const handleSubmit = (e) => {
     const requestOptions = {
       method: "POST",
@@ -73,7 +76,10 @@ const Login = (props) => {
 
   return (
     <>
-      <div className="app-name">CineMatch</div>
+      <div className="app-name">
+        <img src={logo} />
+        CineMatch
+      </div>
       <div className="auth-wrapper">
         <div className="auth-inner">
           <form onSubmit={handleSubmit}>
