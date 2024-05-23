@@ -1,24 +1,57 @@
-import logo from './logo.svg';
-import './App.css';
+
+import "./App.css";
+import Login from "./components/Login/Login";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import UserProfile from "./components/UserProfile/UserProfile";
+import { useState } from "react";
+import { ToastContainer } from "react-toastify";
+import { Navigate } from "react-router-dom";
 
 function App() {
+  const [user, setUser] = useState({ userid: "", username: "" });
+  const [movie, setMovie] = useState([]);
+
+  const removeAfterTime = 20 * 60 * 1000; 
+setTimeout(() => {
+  localStorage.removeItem("currentUser");
+}, removeAfterTime);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Router>
+        <div className="App">
+          <Routes>
+            <Route
+              exact
+              path="/"
+              element={<Login user={user} setUser={setUser} />}
+            />
+            <Route
+              path="/user-profile"
+              element={
+                localStorage.getItem("currentUser") ? (
+                  <UserProfile user={user} movie={movie}/>
+                ) : (
+                  <Navigate to="/" />
+                )
+              }
+            />
+          </Routes>
+        </div>
+      </Router>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
+    </>
   );
 }
 
